@@ -1,0 +1,7 @@
+apiVersion: v2
+name: my-xapp
+description: O-RAN xApp - KPM Monitor + RC Control
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+

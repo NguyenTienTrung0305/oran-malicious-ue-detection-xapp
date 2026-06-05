@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.xappName }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.xappName }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.xappName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.xappName }}
+    spec:
+      hostname: {{ .Values.xappName }}
+      containers:
+        - name: {{ .Values.xappName }}
+          image: "{{ .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: rmrdata
+              containerPort: {{ .Values.rmr.dataPort }}
+              protocol: TCP
+            - name: rmrroute
+              containerPort: {{ .Values.rmr.routePort }}
+              protocol: TCP
+            - name: http-framework
+              containerPort: {{ .Values.httpPort }}
+              protocol: TCP
+            - name: http-flask
+              containerPort: {{ .Values.httpFlask }}
+          env:
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            {{- range $k, $v := .Values.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: rt-volume
+              mountPath: /app/routes
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.rmr.dataPort }}
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.rmr.dataPort }}
+            initialDelaySeconds: 30
+            periodSeconds: 30
+      volumes:
+        - name: config
+          configMap:
+            name: {{ .Values.xappName }}-config
+        - name: rt-volume
+          configMap:
+            name: xapp-rt-config

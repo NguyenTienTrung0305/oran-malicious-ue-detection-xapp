@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.xappName }}-config
+  namespace: {{ .Values.namespace }}
+data:
+  config-file.json: |
+    {
+      "xapp_name": "{{ .Values.xappName }}",
+      "version": "{{ .Values.image.tag }}",
+      "containers": [
+        {
+          "name":"{{ .Values.xappName }}",
+          "image":{
+            "registry":"{{ .Values.image.registry }}",
+            "name":"{{ .Values.image.name }}",
+            "tag":"{{ .Values.image.tag }}"
+          }
+        }
+      ],
+      "messaging": {
+        "ports": [
+          {
+            "name": "rmrroute",
+            "container": "{{ .Values.xappName }}",
+            "port": {{ .Values.rmr.routePort }},
+            "txMessages": ["RIC_SUB_REQ", "RIC_SUB_DEL_REQ", "RIC_CONTROL_REQ"],
+            "rxMessages": ["RIC_SUB_RESP", "RIC_SUB_FAILURE", "RIC_SUB_DEL_RESP", "RIC_INDICATION", "RIC_CONTROL_ACK", "RIC_CONTROL_FAILURE"],
+            "policies": []
+          },
+          {
+            "name": "rmrdata",
+            "container": "{{ .Values.xappName }}",
+            "port": {{ .Values.rmr.dataPort }},
+            "txMessages": ["RIC_SUB_REQ", "RIC_SUB_DEL_REQ", "RIC_CONTROL_REQ"],
+            "rxMessages": ["RIC_SUB_RESP", "RIC_SUB_FAILURE", "RIC_SUB_DEL_RESP", "RIC_INDICATION", "RIC_CONTROL_ACK", "RIC_CONTROL_FAILURE"],
+            "policies": []
+          }
+        ]
+      },
+      "controls": {
+        "granularity_period_ms": 1000,
+        "dl_threshold_bytes": 1000000,
+        "rsrp_threshold_dbm": -100,
+        "sinr_threshold_db": -5,
+        "packet_loss_threshold_pct": 10
+      },
+      "db": {
+        "waitForSdl": false
+      }
+    }

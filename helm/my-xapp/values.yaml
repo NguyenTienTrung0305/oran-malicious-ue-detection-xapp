@@ -1,0 +1,67 @@
+image:
+  registry: "192.168.159.100:5000"
+  name: my-xapp
+  tag: "1.0.14"
+  pullPolicy: Always
+
+xappName: my-xapp
+namespace: ricxapp
+replicaCount: 1
+
+rmr:
+  dataPort: 4560
+  routePort: 4561
+
+httpPort: 8080
+httpFlask: 8088
+
+env:
+  XAPP_NAME: "my-xapp"
+  HOSTNAME: "my-xapp"
+  PLT_NAMESPACE: "ricplt"
+
+  CONFIG_FILE: "/config/config-file.json"
+  RMR_RTG_SVC: "service-ricplt-rtmgr-rmr.ricplt:4561"
+  RMR_SEED_RT: "/app/routes/local.rt"
+  RMR_SRC_ID: "service-ricxapp-my-xapp-rmr.ricxapp"
+  PYTHONUNBUFFERED: "1"
+
+  SERVICE_RICPLT_E2MGR_HTTP: "http://10.106.79.117:3800"
+  DBAAS_SERVICE_HOST: "service-ricplt-dbaas-tcp.ricplt"
+  DBAAS_SERVICE_PORT: "6379"
+  SERVICE_RICPLT_APPMGR_HTTP: "http://service-ricplt-appmgr-http.ricplt:8080"
+
+
+  SERVICE_RICXAPP_MY_XAPP_HTTP_PORT: "http://service-ricxapp-my-xapp-http.ricxapp:8080"
+  SERVICE_RICXAPP_MY_XAPP_RMR_PORT:  "rmr://service-ricxapp-my-xapp-rmr.ricxapp:4560"
+
+  # KPM subscription — report period and granularity must match for consistent counters
+  KPM_METRIC_GROUP: "drl_malicious_ue"
+  KPM_REPORT_PERIOD_MS: "1024"
+  KPM_GRANULARITY_MS: "1024"
+  KPM_STYLE: "5"
+  KPM_UE_IDS: "0,1"
+
+  # Both UEs start in priority/healthy slice (SD=1). xApp auto-migrates malicious
+  # UE to quarantine slice (SD=2) via RIC Control — patched gNB rebinds the UE.
+  # Format: "<gNB-CU-UE-F1AP-ID>:<sst>/<sd_hex>,..."
+  # srsRAN typically assigns F1AP IDs starting at 0 (first attached UE = 0).
+  UE_SLICE_MAP: "0:1/000001,1:1/000001"
+
+  # DRL disabled — chưa train, dùng TEST_CONTROL để verify RC encoding path trước
+  DRL_ENABLED: "false"
+  DRL_MODEL_PATH: "/tmp/drl_model"
+  TEST_CONTROL_ON_STARTUP: "1"
+  TEST_CONTROL_DELAY_S: "20"
+  TEST_CONTROL_UE_ID: "0"
+  ROUTE_WAIT_SECS: "60"
+  GNB_WAIT_TIMEOUT: "120"
+
+
+resources:
+  limits:
+    cpu: "1"
+    memory: "512Mi"
+  requests:
+    cpu: "100m"
+    memory: "128Mi"

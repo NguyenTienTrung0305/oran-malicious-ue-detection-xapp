@@ -1,0 +1,47 @@
+# Service cho RMR (port 4560)
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-ricxapp-my-xapp-rmr
+  namespace: ricxapp
+  labels:
+    app: my-xapp
+    ric.xapp: "true"
+spec:
+  selector:
+    app: my-xapp
+  ports:
+    - name: rmrdata
+      port: 4560
+      targetPort: 4560
+      protocol: TCP
+    - name: rmrroute
+      port: 4561
+      targetPort: 4561
+      protocol: TCP
+    - name: notification
+      port: 8088
+      targetPort: 8088
+      protocol: TCP
+
+---
+# Service cho HTTP (port 8080) — SubMgr callback về đây
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-ricxapp-my-xapp-http
+  namespace: ricxapp
+  labels:
+    app: my-xapp
+    ric.xapp: "true"
+spec:
+  selector:
+    app: my-xapp
+  ports:
+    - name: health
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+    - name: notification
+      port: 8088
+      targetPort: 8088
