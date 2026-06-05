@@ -1,0 +1,7 @@
+newrt|start
+rte|12050|service-ricxapp-my-xapp-rmr.ricxapp:4560
+rte|12011|service-ricxapp-my-xapp-rmr.ricxapp:4560
+rte|12012|service-ricxapp-my-xapp-rmr.ricxapp:4560
+rte|12041|service-ricxapp-my-xapp-rmr.ricxapp:4560
+rte|12042|service-ricxapp-my-xapp-rmr.ricxapp:4560
+newrt|end
