@@ -1,0 +1,90 @@
+#### gnbs config
+cu_cp:
+  amf:
+    addr: 127.0.0.1
+    port: 38412
+    bind_addr: 127.0.0.1
+    supported_tracking_areas:
+      - tac: 7
+        plmn_list:
+          - plmn: "00101"
+            tai_slice_support_list:
+              - sst: 1
+                sd: 0x000001
+              - sst: 1
+                sd: 0x000002
+  inactivity_timer: 7200
+
+
+cu_up:
+  ngu:
+    socket:
+      - bind_addr: 127.0.0.1
+        ext_addr: auto
+
+
+
+e2:
+  enable_du_e2: true
+  e2sm_kpm_enabled: true
+  e2sm_rc_enabled: true
+  addr: 192.168.159.100
+  port: 32222
+  bind_addr: 192.168.159.140
+
+# Radio Unit - Định nghĩa phân cứng vô tuyến => Dùng ZeroMQ làm ăng-ten ảo
+ru_sdr:
+  device_driver: zmq
+  device_args: tx_port=tcp://127.0.0.1:2000,rx_port=tcp://127.0.0.1:2001,base_srate=23.04e6
+  srate: 23.04
+  tx_gain: 75
+  rx_gain: 75
+
+
+cell_cfg:
+  dl_arfcn: 368500
+  band: 3
+  channel_bandwidth_MHz: 20
+  common_scs: 15
+  plmn: "00101"
+  tac: 7
+  pdcch:
+    common:
+      ss0_index: 0
+      coreset0_index: 12
+    dedicated:
+      ss2_type: common
+      dci_format_0_1_and_1_1: false
+  prach:
+    prach_config_index: 1
+  pdsch:
+    mcs_table: qam64
+  pusch:
+    mcs_table: qam64
+
+  slicing:
+    -
+      sst: 1
+      sd: 0x000001
+      sched_cfg:
+        min_prb_policy_ratio: 0
+        max_prb_policy_ratio: 100
+    -
+      sst: 1
+      sd: 0x000002
+      sched_cfg:
+        min_prb_policy_ratio: 0
+        max_prb_policy_ratio: 1
+
+log:
+  filename: /tmp/gnb.log
+  all_level: warning
+  hex_max_size: 0
+
+pcap:
+  mac_enable: false
+  ngap_enable: false
+
+metrics:
+  layers:
+    enable_rlc: true
