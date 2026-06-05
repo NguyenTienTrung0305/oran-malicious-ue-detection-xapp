@@ -1,0 +1,42 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "description": "Controls schema for my-xapp",
+    "properties": {
+        "LOG_LEVEL": {
+            "type": "string",
+            "default": "INFO",
+            "enum": ["DEBUG", "INFO", "WARNING", "ERROR"]
+        },
+        "KPM_REPORT_PERIOD_MS": {
+            "type": "string",
+            "default": "1024"
+        },
+        "KPM_GRANULARITY_MS": {
+            "type": "string",
+            "default": "1000"
+        },
+        "KPM_METRIC_GROUP": {
+            "type": "string",
+            "default": "drl_malicious_ue"
+        },
+        "DRL_ENABLED": {
+            "type": "string",
+            "default": "true",
+            "enum": ["true", "false"]
+        },
+        "DRL_MODEL_PATH": {
+            "type": "string",
+            "default": "/tmp/drl_model"
+        },
+        "GNB_WAIT_TIMEOUT": {
+            "type": "string",
+            "default": "120"
+        },
+        "ROUTE_WAIT_SECS": {
+            "type": "string",
+            "default": "60"
+        }
+    },
+    "additionalProperties": false
+}

@@ -1,0 +1,79 @@
+{
+    "name": "my-xapp",
+    "xappName": "my-xapp",
+    "version": "1.0.1",
+    "containers": [
+        {
+            "name": "my-xapp",
+            "image": {
+                "registry": "192.168.159.100:5000",
+                "name": "my-xapp",
+                "tag": "1.0.1"
+            }
+        }
+    ],
+    "messaging": {
+        "ports": [
+            {
+                "name": "rmr-data",
+                "container": "my-xapp",
+                "port": 4560,
+                "rxMessages": [
+                    "RIC_INDICATION",
+                    "RIC_SUB_RESP",
+                    "RIC_SUB_FAILURE",
+                    "RIC_SUB_DEL_RESP",
+                    "RIC_CONTROL_ACK",
+                    "RIC_CONTROL_FAILURE"
+                ],
+                "txMessages": [
+                    "RIC_SUB_REQ",
+                    "RIC_SUB_DEL_REQ",
+                    "RIC_CONTROL_REQ"
+                ],
+                "policies": [],
+                "description": "RMR data port for E2 messages"
+            },
+            {
+                "name": "rmr-route",
+                "container": "my-xapp",
+                "port": 4561,
+                "description": "RMR route port for RTMGR route updates"
+            },
+            {
+                "name": "http",
+                "container": "my-xapp",
+                "port": 8088,
+                "description": "HTTP port for SubMgr webhook callbacks"
+            }
+        ]
+    },
+    "rmr": {
+        "protPort": "tcp:4560",
+        "maxSize": 65536,
+        "numWorkers": 1,
+        "txMessages": [
+            "RIC_SUB_REQ",
+            "RIC_SUB_DEL_REQ",
+            "RIC_CONTROL_REQ"
+        ],
+        "rxMessages": [
+            "RIC_INDICATION",
+            "RIC_SUB_RESP",
+            "RIC_SUB_FAILURE",
+            "RIC_SUB_DEL_RESP",
+            "RIC_CONTROL_ACK",
+            "RIC_CONTROL_FAILURE"
+        ]
+    },
+    "controls": {
+        "LOG_LEVEL": "INFO",
+        "KPM_REPORT_PERIOD_MS": "1024",
+        "KPM_GRANULARITY_MS": "1000",
+        "KPM_METRIC_GROUP": "drl_malicious_ue",
+        "DRL_ENABLED": "true",
+        "DRL_MODEL_PATH": "/tmp/drl_model",
+        "GNB_WAIT_TIMEOUT": "120",
+        "ROUTE_WAIT_SECS": "60"
+    }
+}
